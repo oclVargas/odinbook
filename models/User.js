@@ -46,7 +46,9 @@ const UserSchema = new UserSchema({
 
     friendRequests: [
         { type: Schema.Types.ObjectId, ref: "User" }
-    ]
+    ],
+
+    profile: { type: String }
 })
 
 UserSchema.plugin(passportLocalMongoose)
