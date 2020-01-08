@@ -1,0 +1,19 @@
+extends layout
+//- this sign up form will also act as home page
+block content
+    form(action="", method="POST", class="signup-form")
+        include includes/messages
+
+        label(for="firstName") First name
+        input(type="text", name="firstName", id="firstName")
+
+        label(for="lastName") Last name
+        input(type="text", name="lastName", id="lastName")
+
+        label(for="email") Email
+        input(type="email", name="email", id="email")
+
+        label(for="password") Password
+        input(type="password", name="password", id="password")
+
+        button(type="submit") Sign Up

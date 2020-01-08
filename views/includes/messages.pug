@@ -1,0 +1,12 @@
+if (typeof errors != 'undefined')
+    each error in errors[0]
+        p !{error.msg}
+
+if (success_msg.length > 0)
+    p !{success_msg}
+
+if (error_msg.length > 0)
+    p !{error_msg}
+
+if (flashError.length > 0)
+    p !{flashError}
