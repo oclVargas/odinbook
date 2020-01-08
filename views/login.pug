@@ -1,4 +1,16 @@
 extends layout
 
 block content
-    p Hey whats up
+    include includes/messages
+
+    form(action="", method="POST")
+        label(for="username") Email
+        input(type="email", name="username", id="username", required)
+
+        label(for="password") Password
+        input(type="password", name="password", id="password", required)
+
+        button Log In
+
+    button
+        a(href="/users/signup") Create New Account

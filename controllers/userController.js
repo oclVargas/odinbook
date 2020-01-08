@@ -80,7 +80,11 @@ exports.login_get = (req, res) => {
 }
 
 exports.login_post = (req, res, next) => {
-
+    passport.authenticate('local', {
+        successRedirect: '/home',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next)
 }
 
 exports.signup_get = (req, res) => {

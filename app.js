@@ -5,10 +5,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var flash = require('connect-flash');
 var session = require('express-session');
+var passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var postsRouter = require('./routes/posts');
+
+// Set up mongoose connection
+var mongoose = require('mongoose');
+var dev_db_url = 'mongodb+srv://cat:meow@cluster0-jlzna.mongodb.net/odinbook?retryWrites=true&w=majority'
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+require('./config/passport')(passport)
+
+const { ensureAuthenticated } = require('./config/auth')
 
 var app = express();
 
@@ -22,22 +36,14 @@ app.use(session({
   saveUninitialized: true
 }))
 
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(flash());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-// Set up mongoose connection
-var mongoose = require('mongoose');
-var dev_db_url = 'mongodb+srv://cat:meow@cluster0-jlzna.mongodb.net/odinbook?retryWrites=true&w=majority'
-var mongoDB = process.env.MONGODB_URI || dev_db_url;
-mongoose.connect(mongoDB, { useNewUrlParser: true });
-mongoose.Promise = global.Promise;
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg')
@@ -65,7 +71,6 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-
 });
 
 module.exports = app;
