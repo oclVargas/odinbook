@@ -1,0 +1,18 @@
+extends layout
+
+block content
+    each person in users
+        .user-container
+            img(src="http://media.salon.com/2013/01/Facebook-no-profile-picture-icon-620x389.jpg", class="profile-pic")
+            h4 !{person.firstName} !{person.lastName}
+            a(href="/users/"+person.url+"/profile") Profile
+
+            if !(currUser._id.equals(person._id))
+                if (currUser.friends.find(o => o.equals(person._id)))
+                    p You and !{person.firstName} are friends
+                else if (currUser.friendRequests.find(o => o.equals(person._id)))
+                    p !{person.firstName} has send you a friend request. Go to your a(href="/users/"+!{currUser._id}+"/profile") to accept it
+                else if (person.friendRequests.find(o => o.equals(user._id)))
+                    p You already sent !{person.firstName} a friend request
+                else
+                    a(href="/users/"+person._id+"/add") Add Friend

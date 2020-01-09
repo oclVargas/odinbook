@@ -52,6 +52,10 @@ const UserSchema = new Schema({
     profile: { type: String }
 })
 
+UserSchema
+    .virtual('url')
+    .get(function() { return `${this._id}` })
+
 // UserSchema.plugin(passportLocalMongoose)
 
 module.exports = mongoose.model('User', UserSchema)

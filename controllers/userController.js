@@ -3,7 +3,6 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const multer = require("multer"); // might need 2B in routes
 const cloudinary = require("cloudinary");
-const validator = require("express-validator");
 const { body, validationResult, sanitizeBody } = require("express-validator");
 
 
@@ -93,11 +92,20 @@ exports.signup_get = (req, res) => {
 
 exports.logout = (req, res) => {
     req.logout();
-    res.redirect('back');
+    res.redirect('/login');
 }
 
 exports.all_users = (req, res, next) => {
-
+    User.find({}, (err, users) => {
+        if (err) {
+            console.log(err)
+            req.flash('error', 'There was a problem getting all users')
+            // take them back to home feed if error
+            res.redirect('/')
+        } else {
+            res.render('users', { users: users })
+        }
+    })
 }
 
 exports.user_profile = (req, res) => {
