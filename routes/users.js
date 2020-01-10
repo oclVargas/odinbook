@@ -8,13 +8,13 @@ router.get('/signup', userController.signup_get)
 // Handle sign up form
 router.post('/signup', userController.signup_post);
 
-router.get('/login', userController.login_get);
-
-router.post('/login', userController.login_post);
+// moved to index route
+// router.get('/login', userController.login_get);
+// router.post('/login', userController.login_post);
 
 router.get('/all', userController.all_users);
 
-// router.get('/:id/profile', userController.user_profile);
+router.get('/:id/profile', userController.user_profile);
 
 // router.get('/:id/add', userController.friend_request);
 

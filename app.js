@@ -6,10 +6,9 @@ var logger = require('morgan');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
+require('./config/passport')(passport)
+const { ensureAuthenticated } = require('./config/auth')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var postsRouter = require('./routes/posts');
 
 // Set up mongoose connection
 var mongoose = require('mongoose');
@@ -20,9 +19,9 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-require('./config/passport')(passport)
 
-const { ensureAuthenticated } = require('./config/auth')
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -56,7 +55,8 @@ app.use((req, res, next) => {
 })
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', ensureAuthenticated, usersRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

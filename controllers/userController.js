@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Post = require("../models/Post"); // delete later?
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const multer = require("multer"); // might need 2B in routes
@@ -109,7 +110,20 @@ exports.all_users = (req, res, next) => {
 }
 
 exports.user_profile = (req, res) => {
-
+    User.findById(req.params.id)
+        .populate("friends")
+        .populate("friendRequests")
+        .populate("posts")
+        .exec((err, user) => {
+            if (err) {
+                console.log(err)
+                req.flash("error_msg", "There has been an error")
+                res.redirect("back")
+            } else {
+                console.log(user)
+                res.render("user_profile", { userData: user })
+            }
+        })
 }
 
 

@@ -1,0 +1,43 @@
+extends layout
+
+block content
+    .profile(style='height: 200px;;')
+        .cover-photo(style="background-image: url('https://theoheartist.com/wp-content/uploads/sites/2/2015/01/fbdefault.png'); height: 200px")
+    .personImg(style='height:100px;')
+        p !{userData.profile}
+        .name
+            h2 !{userData.firstName} !{userData.lastName}
+            console.log(userData._id)
+    .bottomBar
+        if (userData._id.equals(currUser._id))
+            if (userData.friendRequests.length > 0)
+                each request in userData.friendRequests
+                    .request
+                        h5 Request from a(href="/users/"+!{request._id}+"/profile") !{request.firstName} !{request.lastName}
+                        a(href="/users/" + request._id + "/accept") Accept
+                        a(href="/users/" + request._id + "/decline") Decline
+        span !{userData.firstName}'s friends
+        hr
+        each friend in userData.friends
+            span
+                a(href="/users/" + friend._id + "/profile") !{friend.firstName} !{friend.lastName}
+                br
+    .main-bar
+        each posts in userData.posts
+            .post
+                .post-header
+                    .post-info
+                        a(href="/users/"+ post.creator._id +"/profile") !{post.creator.firstName} !{post.creator.lastName}
+                        span
+                            a(href="/posts/"+ post._id) Created: !{post.time.getDate()}. + !{post.time.getMonth()}. !{post.time.getFullYear()} - !{post.time.getHours()}: !{post.time.getMinutes()}
+                .content
+                    if (post.image)
+                        .post-image
+                            img(src="!{post.image}")
+                    if (currUser.liked_posts.find(o => o.equals(post._id)))
+                        p !{post.likes} Likes
+                    else
+                        a(href="/posts/" + post._id + "/like") Like !{post.likes}
+                    .post-content
+                        p !{post.content}
+
