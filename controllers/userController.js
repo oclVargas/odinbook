@@ -126,7 +126,48 @@ exports.user_profile = (req, res) => {
         })
 }
 
+exports.friend_request = (req, res) => {
+    // Find logged in user
+    User.findById(req.user._id, (err, user) => {
+        if (err) {
+            console.log(err)
+            req.flash("error_msg", "There has been an error adding this person to your friends list")
+            res.redirect("back")
+        } else {
+            // find user to be added
+            User.findById(req.params.id, (err, foundUser) => {
+                if (err) {
+                    console.log(err)
+                    req.flash("error_msg", "Person not found")
+                    res.redirect("back")
+                } else {
+                    // FOUNDUSER IS THE USER THAT THE LOGGED IN USER WANTS TO ADD
+                    // curr USER IS THE CURRENT LOGGED IN USER
 
+                    // checking if the user is already in foundUsers friend requests or friends list
+                    if (foundUser.friendRequests.find(o => o._id.equals(user._id))) {
+                        req.flash("error_msg", `You already sent a friend request to ${user.firstName}`)
+                        return res.redirect("back")
+                    } else if (foundUser.friends.find(o => o._id.equals(user._id))) {
+                        req.flash("error_msg", "The user is already in your friends list")
+                        return res.redirect("back")
+                    }
 
+                    let currentUser = {
+                        _id: user._id,
+                        firstName: user.firstName,
+                        lastName: user.lastName
+                    }
+
+                    foundUser.friendRequests.push(currentUser)
+                    foundUser.save()
+                    req.flash("success_msg", `You sent ${foundUser.firstName} a friend request!`)
+                    res.redirect("back")
+                }
+            })
+        }
+        
+    })
+}
 
 
