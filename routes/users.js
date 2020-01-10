@@ -18,7 +18,7 @@ router.get('/:id/profile', userController.user_profile);
 
 router.get('/:id/add', userController.friend_request);
 
-// router.get('/:id/accept', userController.friend_request_accept);
+router.get('/:id/accept', userController.friend_request_accept);
 
 // router.get('/:id/decline', userController.friend_request_decline);
 

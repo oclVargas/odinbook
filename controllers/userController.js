@@ -126,6 +126,8 @@ exports.user_profile = (req, res) => {
         })
 }
 
+
+// TODO where you see redirects "back" change it up later ok?
 exports.friend_request = (req, res) => {
     // Find logged in user
     User.findById(req.user._id, (err, user) => {
@@ -167,6 +169,48 @@ exports.friend_request = (req, res) => {
             })
         }
         
+    })
+}
+
+exports.friend_request_accept = (req, res) => {
+    User.findById(req.user._id, (err, user) => {
+        if (err) {
+            console.log(err)
+            req.flash("error_msg", "There has been an error finding your profile")
+            res.redirect("back")
+        } else {
+            User.findById(req.params.id, (err, foundUser) => {
+                let r = user.friendRequests.find(o => {
+                    o._id.equals(req.params.id)
+                })
+                if (r) {
+                    let index = user.friendRequests.indexOf(r)
+                    user.friendRequests.splice(index, 1)
+                    let friend = {
+                        _id: foundUser._id,
+                        firstName: foundUser.firstName,
+                        lastName: foundUser.lastName
+                    }
+
+                    user.friends.push(friend)
+                    user.save()
+
+                    let currentUser = {
+                        _id: user._id,
+                        firstName: user.firstName,
+                        lastName: user.lastName
+                    }
+
+                    foundUser.friends.push(currentUser)
+                    foundUser.save()
+                    req.flash("success_msg", `You and ${foundUser.firstName} are now friends!`)
+                    res.redirect("back")
+                } else {
+                    req.flash("error_msg", "There has been an error")
+                    res.redirect("back")
+                }
+            })
+        }
     })
 }
 
