@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-// MOVE THIS TO INDEX ROUTE LATER ALSO ACTS AS HOMEPAGE
+// MOVE THIS TO INDEX ROUTE LATER ALSO ACTS AS HOMEPAGE / SIGNUP
 router.get('/signup', userController.signup_get)
 
 // Handle sign up form
@@ -20,7 +20,7 @@ router.get('/:id/add', userController.friend_request);
 
 router.get('/:id/accept', userController.friend_request_accept);
 
-// router.get('/:id/decline', userController.friend_request_decline);
+router.get('/:id/decline', userController.friend_request_decline);
 
 
 module.exports = router;

@@ -214,4 +214,34 @@ exports.friend_request_accept = (req, res) => {
     })
 }
 
+exports.friend_request_decline = (req, res) => {
+    User.findById(req.user_id, (err, user) => {
+        if (err) {
+            console.log(err)
+            req.flash("error_msg", "There has been an error declining the request")
+            res.redirect("back")
+        } else {
+            User.findById(req.params.id), (err, foundUser) => {
+                if (err) {
+                    console.log(err)
+                    req.flash("error_msg", "There has been an error declining the request")
+                    res.redirect("back")
+                } else {
+                    // remove the request
+                    let r = user.friendRequests.find(o => {
+                        o._id.equals(foundUser._id)
+                    })
+
+                    if (r) {
+                        let index = user.friendRequests.indexOf(r)
+                        user.friendRequests.splice(index, 1)
+                        user.save()
+                        req.flash("success_msg", "You declined")
+                        res.redirect("back")
+                    }
+                }
+            }
+        }
+    })
+}
 
